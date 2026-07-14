@@ -13,3 +13,12 @@ def criar_status(session, word_id):
     session.commit()
     return status
 
+def deletar_palavra(session, nome):
+    palavara_del=session.query(Palavra).filter_by(nome=nome).first()
+    session.delete(palavara_del)
+    session.commit()
+    return
+
+def palavras_revisar(session):
+    resultado=session.query(Palavra).join(Status).filter_by(Status.due_date<=date.today()).all()
+    return resultado
