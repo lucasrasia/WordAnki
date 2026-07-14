@@ -22,3 +22,6 @@ def deletar_palavra(session, nome):
 def palavras_revisar(session):
     resultado=session.query(Palavra).join(Status).filter_by(Status.due_date<=date.today()).all()
     return resultado
+
+def pos_estudo(session, resposta):
+    
