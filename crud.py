@@ -23,17 +23,23 @@ def palavras_revisar(session):
     resultado=session.query(Palavra).join(Status).filter_by(Status.due_date<=date.today()).all()
     return resultado
 
-def pos_estudo(session, resposta, word_id):  #resposta = fácil/difícil/errei
-    intervalo=[1, 3, 7, 14, 30, 90] # cada índice é um nível de conhecimento
+def avalar(session, resposta, word_id):  #resposta = fácil/difícil/errei
+    intervalo=[1, 3, 5, 7, 10, 14, 20, 30] # cada índice é um nível de conhecimento
     status_word=session.query(Status).filter(Status.word_id==word_id).first()
     if not status_word:
         raise ValueError("Status não encontrado")
     if resposta=="fácil":
-        status_word.step=0
+        if status_word.step==len(intervalo)-1: # não exceder limite
+            ...
+        else:
+            status_word.step=status_word.step+1 # aumenta o nível de conheccimento
     if resposta=="dificil":
-        ...
+        if status_word.step==0: # não exceder limite
+            ...
+        else:
+            status_word.step=status_word.step-1 # diminui o  o nível de conheccimento
     else:       #errei
         status_word.step=0  #aparecer na próxima sessão
-    status_word.due_date=date.today()+status_word.step
+    status_word.due_date=date.today()+intervalo[status_word.step]
     session.commit()
     return status_word
