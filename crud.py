@@ -20,11 +20,11 @@ def deletar_palavra(session, nome):
     return
 
 def palavras_revisar(session):
-    resultado=session.query(Palavra).join(Status).filter_by(Status.due_date<=date.today()).all()
+    resultado=session.query(Palavra).join(Status).filter(Status.due_date<=date.today()).all()
     return resultado
 
-def avalar(session, resposta, word_id):  #resposta = fácil/difícil/errei
-    intervalo=[1, 3, 5, 7, 10, 14, 20, 30] # cada índice é um nível de conhecimento
+def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
+    intervalo=[1, 2, 3, 5, 7, 10, 14, 20, 25, 30] # cada índice é um nível de conhecimento
     status_word=session.query(Status).filter(Status.word_id==word_id).first()
     if not status_word:
         raise ValueError("Status não encontrado")
