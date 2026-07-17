@@ -19,9 +19,8 @@ class PalavraDeletada(BaseModel):
 class Revisar(BaseModel):
     nota: str   # facil, dificil, errei
 # --Rotas--
-
 # criar palavra 
-@app.post('/palavras/create')
+@app.post('/palavras')
 def create(dados: NovaPalavra, session: Session = Depends(get_session)):
     nova_palavra=criar_palavra(session, dados.nome, dados.traducao, dados.frase)
     criar_status(session, nova_palavra.id)
@@ -32,3 +31,17 @@ def create(dados: NovaPalavra, session: Session = Depends(get_session)):
 def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
     deletar_palavra(session, dados.nome)
     return{'message':'palavra deletada'}
+
+#palavras revisar
+@app.get('/palavras/estudar')
+def estudar(session: Session = Depends(get_session)):
+    review=palavras_revisar(session) # lista
+    return [
+        {
+            "id": palavra.id,
+            "nome": palavra.nome,
+            "traducao": palavra.traducao,
+            "frase": palavra.frase,
+        }
+        for palavra in review
+    ]
