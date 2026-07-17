@@ -1,5 +1,6 @@
 from models import Palavra, Status
 from datetime import date, timedelta
+from sqlalchemy import or_
 
 def criar_palavra(session, nome, traducao, frase):
     palavra= Palavra(nome=nome, traducao=traducao, frase=frase)
@@ -20,7 +21,7 @@ def deletar_palavra(session, nome):
     return
 
 def palavras_revisar(session):
-    resultado=session.query(Palavra).join(Status).filter(Status.due_date<=date.today()).all()
+    resultado = (session.query(Palavra).join(Status).filter(or_(Status.due_date <= date.today(),Status.due_date == date.today() + timedelta(days=1))).all())
     return resultado
 
 def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
@@ -30,16 +31,16 @@ def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
         raise ValueError("Status não encontrado")
     if resposta=="facil":
         if status_word.step==len(intervalo)-1: # não exceder limite
-            ...
+            return status_word
         else:
             status_word.step=status_word.step+1 # aumenta o nível de conheccimento
     if resposta=="dificil":
         if status_word.step==0: # não exceder limite
-            ...
+            return status_word
         else:
             status_word.step=status_word.step-1 # diminui o  o nível de conheccimento
     else:       #errei
         status_word.step=0  #aparecer na próxima sessão
-    status_word.due_date=date.today()+intervalo[status_word.step]
+    status_word.due_date=date.today()+timedelta(intervalo[status_word.step])
     session.commit()
     return status_word
