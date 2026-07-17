@@ -50,4 +50,4 @@ def estudar(session: Session = Depends(get_session)):
 @app.post('/palavras/{word_id}/review')
 def review(word_id: int, dados: Revisar, session: Session = Depends(get_session), ):
     palavra_avaliada=avaliar(session, dados.nota, word_id)
-    return{'ok': True, 'palavra': palavra_avaliada}
+    return{'ok': True, 'palavra': palavra_avaliada,'nota':dados.nota}

@@ -30,17 +30,13 @@ def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
     if not status_word:
         raise ValueError("Status não encontrado")
     if resposta=="facil":
-        if status_word.step==len(intervalo)-1: # não exceder limite
-            return status_word
-        else:
-            status_word.step=status_word.step+1 # aumenta o nível de conheccimento
-    if resposta=="dificil":
-        if status_word.step==0: # não exceder limite
-            return status_word
-        else:
-            status_word.step=status_word.step-1 # diminui o  o nível de conheccimento
+        if status_word.step < len(intervalo)-1:
+            status_word.step += 1
+    elif resposta=="dificil":
+        if status_word.step>0: # não exceder limite
+            status_word.step -= 1
     else:       #errei
         status_word.step=0  #aparecer na próxima sessão
-    status_word.due_date=date.today()+timedelta(intervalo[status_word.step])
+    status_word.due_date = date.today() + timedelta(days=intervalo[status_word.step])
     session.commit()
     return status_word
