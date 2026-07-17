@@ -43,11 +43,24 @@ def estudar(session: Session = Depends(get_session)):
             "traducao": palavra.traducao,
             "frase": palavra.frase,
         }
-        for palavra in resultado
+        for palavra, status in resultado
     ]
 
 #alterar status
 @app.post('/palavras/{word_id}/review')
-def review(word_id: int, dados: Revisar, session: Session = Depends(get_session), ):
+def review(word_id: int, dados: Revisar, session: Session = Depends(get_session)):
     palavra_avaliada=avaliar(session, dados.nota, word_id)
-    return{'ok': True, 'palavra': palavra_avaliada,'nota':dados.nota}
+    return {
+    'ok': True,
+    'nota': dados.nota,
+    'palavra': {
+        'id': palavra_avaliada.word_id,
+        'step': palavra_avaliada.step,
+        'due_date': palavra_avaliada.due_date.isoformat(),
+    }
+}
+
+@app.get('palavras/analise')
+def analise(session: Session = Depends(get_session)):
+    palavras=palavras_revisar(session)
+    

@@ -21,7 +21,7 @@ def deletar_palavra(session, nome):
     return
 
 def palavras_revisar(session):
-    resultado = (session.query(Palavra).join(Status).filter(or_(Status.due_date <= date.today(),Status.due_date == date.today() + timedelta(days=1))).all())
+    resultado = (session.query(Palavra, Status).join(Status).filter(or_(Status.due_date <= date.today(),Status.due_date == date.today() + timedelta(days=1))).all())
     return resultado
 
 def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
