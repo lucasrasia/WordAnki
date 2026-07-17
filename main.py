@@ -19,14 +19,16 @@ class PalavraDeletada(BaseModel):
 class Revisar(BaseModel):
     nota: str   # facil, dificil, errei
 # --Rotas--
+
 # criar palavra 
 @app.post('/palavras/create')
 def create(dados: NovaPalavra, session: Session = Depends(get_session)):
     nova_palavra=criar_palavra(session, dados.nome, dados.traducao, dados.frase)
     criar_status(session, nova_palavra.id)
     return{'message':'palavra criada', 'id':nova_palavra.id, 'nome':nova_palavra.nome}
+
 #deletar palavra
 @app.post('/palavra/delete')
 def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
-    del_palavra=deletar_palavra(session, dados.nome)
+    deletar_palavra(session, dados.nome)
     return{'message':'palavra deletada'}
