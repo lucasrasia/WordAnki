@@ -7,20 +7,26 @@ from fastapi import FastAPI, Depends
 from pydantic import BaseModel  #"Espero receber json"
 
 app=FastAPI()
-
 #  Schemas (forato que entra os dados)
 class NovaPalavra(BaseModel):   #o React retorna em json: {"nome": "apple", "traducao": "maçã", "frase": "I eat an apple"}
     nome: str
     traducao: str
     frase: str
 
+class PalavraDeletada(BaseModel):
+    nome: str
+
 class Revisar(BaseModel):
     nota: str   # facil, dificil, errei
-
-# Rotas 
-
-@app.post('/palavras')
-def criar(dados: NovaPalavra, session: Session = Depends(get_session)):
+# --Rotas--
+# criar palavra 
+@app.post('/palavras/create')
+def create(dados: NovaPalavra, session: Session = Depends(get_session)):
     nova_palavra=criar_palavra(session, dados.nome, dados.traducao, dados.frase)
     criar_status(session, nova_palavra.id)
     return{'message':'palavra criada', 'id':nova_palavra.id, 'nome':nova_palavra.nome}
+#deletar palavra
+@app.post('/palavra/delete')
+def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
+    del_palavra=deletar_palavra(session, dados.nome)
+    return{'message':'palavra deletada'}
