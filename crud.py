@@ -28,7 +28,7 @@ def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
     status_word=session.query(Status).filter(Status.word_id==word_id).first()
     if not status_word:
         raise ValueError("Status não encontrado")
-    if resposta=="fácil":
+    if resposta=="facil":
         if status_word.step==len(intervalo)-1: # não exceder limite
             ...
         else:
