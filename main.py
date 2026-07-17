@@ -27,7 +27,7 @@ def create(dados: NovaPalavra, session: Session = Depends(get_session)):
     return{'message':'palavra criada', 'id':nova_palavra.id, 'nome':nova_palavra.nome}
 
 #deletar palavra
-@app.post('/palavra/delete')
+@app.post('/palavras/delete')
 def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
     deletar_palavra(session, dados.nome)
     return{'message':'palavra deletada'}
@@ -35,7 +35,7 @@ def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
 #palavras revisar
 @app.get('/palavras/estudar')
 def estudar(session: Session = Depends(get_session)):
-    review=palavras_revisar(session) # lista
+    resultado=palavras_revisar(session) # lista
     return [
         {
             "id": palavra.id,
@@ -43,5 +43,11 @@ def estudar(session: Session = Depends(get_session)):
             "traducao": palavra.traducao,
             "frase": palavra.frase,
         }
-        for palavra in review
+        for palavra in resultado
     ]
+
+#alterar status
+@app.post('/palavras/{word_id}/review')
+def review(word_id: int, dados: Revisar, session: Session = Depends(get_session), ):
+    palavra_avaliada=avaliar(session, dados.nota, word_id)
+    return{'ok': True, 'palavra': palavra_avaliada}
