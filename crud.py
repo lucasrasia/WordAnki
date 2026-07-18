@@ -40,3 +40,14 @@ def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
     status_word.due_date = date.today() + timedelta(days=intervalo[status_word.step])
     session.commit()
     return status_word
+
+def editar(session, id, edit, resposta):
+    palavra_edit=session.query(Palavra).filter(Palavra.id==id)
+    if edit==1: #nome
+        palavra_edit.nome=resposta
+    elif edit==2: #tradução
+        palavra_edit.traduacao=resposta
+    else: #frase
+        palavra_edit.frase=resposta
+    session.commit()
+    return resposta
