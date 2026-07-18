@@ -63,4 +63,13 @@ def review(word_id: int, dados: Revisar, session: Session = Depends(get_session)
 @app.get('palavras/analise')
 def analise(session: Session = Depends(get_session)):
     palavras=palavras_revisar(session)
+    return[
+        {
+            'id':status.word_id,
+            'step': status.step,
+            'due_date': status.due_date,
+        }
+        for palavra, status in palavras
+    ]
     
+@app.post('palavras/editar')
