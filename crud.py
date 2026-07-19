@@ -41,13 +41,15 @@ def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
     session.commit()
     return status_word
 
-def editar(session, id, edit, resposta):
-    palavra_edit=session.query(Palavra).filter(Palavra.id==id)
-    if edit==1: #nome
-        palavra_edit.nome=resposta
-    elif edit==2: #tradução
-        palavra_edit.traduacao=resposta
-    else: #frase
-        palavra_edit.frase=resposta
+def editar(session, id, nome=None, traducao=None, frase=None):
+    palavra_edit=session.query(Palavra).filter(Palavra.id==id).first()
+    if not palavra_edit:
+        raise ValueError("Palavra não encontrada")
+    if nome: 
+        palavra_edit.nome=nome
+    if traducao: 
+        palavra_edit.traduacao=traducao 
+    if frase:
+        palavra_edit.frase=frase
     session.commit()
-    return resposta
+    return palavra_edit

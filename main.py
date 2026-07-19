@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar
+from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar, editar
 from models import Palavra, Status
 from database import session, get_session
 
@@ -18,6 +18,13 @@ class PalavraDeletada(BaseModel):
 
 class Revisar(BaseModel):
     nota: str   # facil, dificil, errei
+
+class Editar(BaseModel):
+    nome: str | None=None
+    traducao: str | None=None
+    frase: str | None=None
+    edit: int
+
 # --Rotas--
 # criar palavra 
 @app.post('/palavras')
@@ -72,4 +79,6 @@ def analise(session: Session = Depends(get_session)):
         for palavra, status in palavras
     ]
     
-#@app.post('palavras/editar')
+@app.patch('palavras/{word_id}/editar')
+def eidtar(word_id: int, dados: Editar,session: Session = Depends(get_session)):
+    edit=editar(session, word_id, dados.edit)
