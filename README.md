@@ -4,7 +4,7 @@ Aplicativo de aprendizado de vocabulário em inglês com repetição espaçada. 
 
 ## Como funciona
 
-O progresso de cada palavra segue uma escada de intervalos fixos (1 → 3 → 7 → 14 → 30 → 90 dias). A cada revisão você avalia seu desempenho:
+O progresso de cada palavra segue uma escada de intervalos fixos (ex: 1 → 3 → 7 → 14 → 30 → 90 dias). A cada revisão você avalia seu desempenho:
 
 - **Errei** — reseta o progresso, a palavra volta amanhã
 - **Difícil** — recua um degrau
