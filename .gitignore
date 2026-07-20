@@ -1,3 +1,7 @@
 banco.db
 salvar.md
-_pycahce_/
+__pycache__/
+frontend/node_modules/
+frontend/dist/
+frontend/*.log
+.agents/
