@@ -14,7 +14,7 @@ class NovaPalavra(BaseModel):   #o React retorna em json: {"nome": "apple", "tra
     frase: str
 
 class PalavraDeletada(BaseModel):
-    nome: str
+    id: int
 
 class Revisar(BaseModel):
     nota: str   # facil, dificil, errei
@@ -33,10 +33,10 @@ def create(dados: NovaPalavra, session: Session = Depends(get_session)):
     return{'message':'palavra criada', 'id':nova_palavra.id, 'nome':nova_palavra.nome}
 
 #deletar palavra
-@app.post('/palavras/delete')
-def delete(dados:  PalavraDeletada, session: Session = Depends(get_session)):
-    deletar_palavra(session, dados.nome)
-    return{'message':'palavra deletada'}
+@app.delete('/palavras/{word_id}')
+def delete(word_id: int, session: Session = Depends(get_session)):
+    deletar_palavra(session, word_id)
+    return{'message':'palavra deletada', 'id': word_id}
 
 #palavras revisar
 @app.get('/palavras/estudar')
@@ -71,7 +71,8 @@ def analise(session: Session = Depends(get_session)):
     palavras=palavras_revisar(session)
     return[
         {
-            'id':status.word_id,
+            'id':palavra.id,
+            'nome': palavra.nome,
             'step': status.step,
             'due_date': status.due_date,
         }
