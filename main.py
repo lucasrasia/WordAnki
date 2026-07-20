@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar, editar
+from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar, editar, todas_palavras
 from models import Palavra, Status
 from database import session, get_session
 
@@ -68,18 +68,19 @@ def review(word_id: int, dados: Revisar, session: Session = Depends(get_session)
 
 @app.get('/palavras/analise')
 def analise(session: Session = Depends(get_session)):
-    palavras=palavras_revisar(session)
-    return[
+    resultado = todas_palavras(session)
+    return [
         {
-            'id':palavra.id,
+            'id': palavra.id,
             'nome': palavra.nome,
+            'traducao': palavra.traducao,
             'step': status.step,
-            'due_date': status.due_date,
+            'due_date': status.due_date.isoformat(),
         }
-        for palavra, status in palavras
+        for palavra, status in resultado
     ]
     
 @app.patch('/palavras/{word_id}')
-def eidtar(word_id: int, dados: Editar,session: Session = Depends(get_session)):
-    palavra=(session, word_id, dados.nome, dados.traducao, dados.frase)
+def editar(word_id: int, dados: Editar,session: Session = Depends(get_session)):
+    palavra=editar(session, word_id, dados.nome, dados.traducao, dados.frase)
     return{'id': palavra.id, 'nome': palavra.nome}

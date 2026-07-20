@@ -26,6 +26,15 @@ def palavras_revisar(session):
     resultado = (session.query(Palavra, Status).join(Status).filter(or_(Status.due_date <= date.today(),Status.due_date == date.today() + timedelta(days=1))).all())
     return resultado
 
+def todas_palavras(session):
+    resultado = (
+        session.query(Palavra, Status)
+        .join(Status, Status.word_id == Palavra.id)
+        .order_by(Status.due_date.asc())
+        .all()
+    )
+    return resultado
+
 def avaliar(session, resposta, word_id):  #resposta = fácil/difícil/errei
     intervalo=[1, 2, 3, 5, 7, 10, 14, 20, 25, 30] # cada índice é um nível de conhecimento
     status_word=session.query(Status).filter(Status.word_id==word_id).first()
