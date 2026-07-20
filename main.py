@@ -23,7 +23,6 @@ class Editar(BaseModel):
     nome: str | None=None
     traducao: str | None=None
     frase: str | None=None
-    edit: int
 
 # --Rotas--
 # criar palavra 
@@ -79,6 +78,7 @@ def analise(session: Session = Depends(get_session)):
         for palavra, status in palavras
     ]
     
-@app.patch('palavras/{word_id}/editar')
+@app.patch('/palavras/{word_id}')
 def eidtar(word_id: int, dados: Editar,session: Session = Depends(get_session)):
-    edit=editar(session, word_id, dados.edit)
+    palavra=(session, word_id, dados.nome, dados.traducao, dados.frase)
+    return{'id': palavra.id, 'nome': palavra.nome}
