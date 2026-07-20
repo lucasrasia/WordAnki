@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getAllWords } from "../api.js";
 import WordListItem from "../components/WordListItem.jsx";
 
-export default function Palavras({ onEditWord }) {
+export default function Palavras({ onEditWord, notice }) {
   const [words, setWords] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -28,6 +28,19 @@ export default function Palavras({ onEditWord }) {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (notice?.message) {
+      setToast(notice.message);
+    }
+  }, [notice]);
+
+  useEffect(() => {
+    if (!toast) return undefined;
+
+    const timeout = setTimeout(() => setToast(""), 2500);
+    return () => clearTimeout(timeout);
+  }, [toast]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -65,7 +78,7 @@ export default function Palavras({ onEditWord }) {
       )}
 
       {toast ? (
-        <p className="mt-4 rounded-lg border border-line bg-surface px-3 py-2 text-sm text-muted">
+        <p className="mt-4 rounded-lg border border-blue bg-blue px-4 py-3 text-sm font-medium text-primary shadow-[0_10px_28px_rgba(62,123,250,0.28)] animate-[action-pop_260ms_ease-out]">
           {toast}
         </p>
       ) : null}

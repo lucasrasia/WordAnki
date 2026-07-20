@@ -2,7 +2,7 @@ from models import Palavra, Status
 from datetime import date, timedelta
 from sqlalchemy import or_
 
-def criar_palavra(session, nome, traducao, frase):
+def criar_palavra(session, nome, traducao, frase=None):
     palavra= Palavra(nome=nome, traducao=traducao, frase=frase)
     session.add(palavra)
     session.commit()
@@ -56,11 +56,11 @@ def editar(session, id, nome=None, traducao=None, frase=None):
     palavra_edit=session.query(Palavra).filter(Palavra.id==id).first()
     if not palavra_edit:
         raise ValueError("Palavra não encontrada")
-    if nome: 
+    if nome is not None: 
         palavra_edit.nome=nome
-    if traducao: 
-        palavra_edit.traduacao=traducao 
-    if frase:
+    if traducao is not None: 
+        palavra_edit.traducao=traducao 
+    if frase is not None:
         palavra_edit.frase=frase
     session.commit()
     return palavra_edit

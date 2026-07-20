@@ -8,15 +8,20 @@ export default function App() {
   const [tab, setTab] = useState("estudar");
   const [editingWord, setEditingWord] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [notice, setNotice] = useState(null);
 
   function openEditor(word) {
     setEditingWord(word);
     setTab("adicionar");
   }
 
-  function finishSave() {
+  function finishSave(action) {
     setEditingWord(null);
     setRefreshKey((key) => key + 1);
+    if (action === "deleted") {
+      setNotice({ message: "Palavra deletada.", tone: "delete", id: Date.now() });
+      setTab("palavras");
+    }
   }
 
   function changeTab(nextTab) {
@@ -31,7 +36,7 @@ export default function App() {
       <main className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col px-5 pb-24 pt-5">
         {tab === "estudar" && <Estudar key={refreshKey} />}
         {tab === "palavras" && (
-          <Palavras key={refreshKey} onEditWord={openEditor} />
+          <Palavras key={refreshKey} onEditWord={openEditor} notice={notice} />
         )}
         {tab === "adicionar" && (
           <Adicionar editingWord={editingWord} onSaved={finishSave} />

@@ -31,6 +31,13 @@ export default function Estudar() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!toast) return undefined;
+
+    const timeout = setTimeout(() => setToast(""), 2500);
+    return () => clearTimeout(timeout);
+  }, [toast]);
+
   async function handleReview(nota) {
     const word = words[index];
     if (!word) return;

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar, editar, todas_palavras
+from crud import criar_palavra, criar_status, deletar_palavra, avaliar, palavras_revisar, editar as editar_palavra, todas_palavras
 from models import Palavra, Status
 from database import session, get_session
 
@@ -11,7 +11,7 @@ app=FastAPI()
 class NovaPalavra(BaseModel):   #o React retorna em json: {"nome": "apple", "traducao": "maçã", "frase": "I eat an apple"}
     nome: str
     traducao: str
-    frase: str
+    frase: str | None = None
 
 class PalavraDeletada(BaseModel):
     id: int
@@ -81,6 +81,6 @@ def analise(session: Session = Depends(get_session)):
     ]
     
 @app.patch('/palavras/{word_id}')
-def editar(word_id: int, dados: Editar,session: Session = Depends(get_session)):
-    palavra=editar(session, word_id, dados.nome, dados.traducao, dados.frase)
+def update(word_id: int, dados: Editar,session: Session = Depends(get_session)):
+    palavra=editar_palavra(session, word_id, dados.nome, dados.traducao, dados.frase)
     return{'id': palavra.id, 'nome': palavra.nome}
